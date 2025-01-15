@@ -3,8 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  getProducts: async () => {
-    return await ipcRenderer.invoke('get-products')
+  getProducts: async (from, size) => {
+    return await ipcRenderer.invoke('get-products', from, size)
   },
   addProduct: async (product) => {
     return await ipcRenderer.invoke('add-product', product)

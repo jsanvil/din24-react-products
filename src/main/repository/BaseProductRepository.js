@@ -12,6 +12,10 @@ export default class BaseProductRepository {
     throw new Error('Method not implemented')
   }
 
+  get(from, size) {
+    throw new Error('Method not implemented')
+  }
+
   /**
    * Create a new product
    * @param {Product} product Product data

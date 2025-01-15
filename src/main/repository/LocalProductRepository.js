@@ -35,6 +35,10 @@ export default class LocalProductRepository extends BaseProductRepository {
     return this.products
   }
 
+  async get(from = 0, size = 2) {
+    return this.products.slice(from, from + size)
+  }
+
   /**
    * Create a new product
    * @param {Product} product Product data

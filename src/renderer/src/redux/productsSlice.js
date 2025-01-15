@@ -12,6 +12,9 @@ const productsSlice = createSlice({
     setProducts(state, action) {
       state.list = action.payload
     },
+    addProducts(state, action) {
+      state.list = state.list.concat(action.payload)
+    },
     clearProducts(state) {
       state.list = []
     },
@@ -29,6 +32,6 @@ const productsSlice = createSlice({
   }
 })
 
-export const { setProducts, clearProducts, addProduct, updateProduct, deleteProduct } =
+export const { setProducts, addProducts, clearProducts, addProduct, updateProduct, deleteProduct } =
   productsSlice.actions
 export default productsSlice.reducer

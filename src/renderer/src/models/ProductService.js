@@ -9,7 +9,18 @@ export default class ProductService {
    */
   async getAll() {
     const result = await window.api.getProducts()
-    console.log('Products repository:', result)
+    this.list = result
+    return result
+  }
+
+  async get(from = 0, size = 2) {
+    const result = await window.api.getProducts(from, size)
+    this.list = result
+    return result
+  }
+
+  async getPage(page, limit) {
+    const result = await window.api.getProductsPage(page, limit)
     this.list = result
     return result
   }

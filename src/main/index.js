@@ -109,8 +109,8 @@ ipcMain.handle('delete-product', async (event, product) => {
     })
 })
 
-ipcMain.handle('get-products', async () => {
-  return await productRepository.getAll()
+ipcMain.handle('get-products', async (_, from, size) => {
+  return await productRepository.get(from, size)
 })
 
 ipcMain.handle('add-product', async (_, product) => {
