@@ -1,10 +1,8 @@
-/* eslint-disable react/prop-types */
-import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setProducts, addProducts } from '../redux/productsSlice'
+import { addProducts } from '../redux/productsSlice'
 import ProductService from '../models/ProductService'
 import ProductListItem from './ProductListItem'
-import { Button } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
 
 export default function ProductList() {
   const productList = useSelector((state) => state.products.list)
@@ -19,21 +17,13 @@ export default function ProductList() {
     })
   }
 
-  useEffect(() => {
-    const init = async () => {
-      await repository.get().then((result) => {
-        dispatch(setProducts(result))
-      })
-    }
-
-    init()
-  }, [])
-
   return (
     <>
-      {productList.map((product) => (
-        <ProductListItem key={product.id} productId={product.id} />
-      ))}
+      <Container fluid className="product-list my-3 mx-0 px-0">
+        {productList.map((product) => (
+          <ProductListItem key={product.id} productId={product.id} />
+        ))}
+      </Container>
       <Button type="button" onClick={loadMore}>
         Cargar más
       </Button>

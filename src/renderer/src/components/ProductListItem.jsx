@@ -28,18 +28,13 @@ export default function ProductListItem({ productId }) {
   }
 
   return (
-    <Card
-      className="product-list-item"
-      onClick={handleDetails}
-      action
-      style={{ cursor: 'pointer' }}
-    >
-      <Card.Header className="text-truncate">{product?.name}</Card.Header>
+    <Card className="product-list-item" onClick={handleDetails}>
+      <Card.Header className="text-truncate">{product.name}</Card.Header>
       <Card.Body>
         <Card.Subtitle className="mb-2 text-muted">
-          {new Intl.NumberFormat().format(product?.price)}
+          {new Intl.NumberFormat().format(product.price)}
         </Card.Subtitle>
-        <Card.Text>Stock: {product?.stock}</Card.Text>
+        <Card.Text>Stock: {product.stock}</Card.Text>
         <Container className="d-flex gap-3 flex-wrap justify-content-end">
           <Button variant="outline-primary" onClick={handleEdit}>
             <i className="bi bi-pencil" />

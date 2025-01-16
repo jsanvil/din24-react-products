@@ -13,13 +13,21 @@ const productsSlice = createSlice({
       state.list = action.payload
     },
     addProducts(state, action) {
-      state.list = state.list.concat(action.payload)
+      // state.list = state.list.concat(action.payload)
+      const products = action.payload
+      console.log('current:', state.list)
+      console.log('to add:', products)
+
+      products.forEach((product) => {
+        state.list.find((p) => p.id === product.id) || state.list.push(product)
+      })
     },
     clearProducts(state) {
       state.list = []
     },
     addProduct(state, action) {
-      state.list.push(action.payload)
+      const product = new Product(action.payload)
+      state.list.find((p) => p.id === product.id) || state.list.push(product)
     },
     updateProduct(state, action) {
       const product = new Product(action.payload)

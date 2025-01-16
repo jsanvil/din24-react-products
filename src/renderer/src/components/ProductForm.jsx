@@ -39,11 +39,14 @@ export default function ProductForm() {
       }
 
       if (id) {
+        // Update product
         const result = await repository.update(formProduct)
+        console.log(result)
         if (result) {
           dispatch(updateProduct(result))
         }
       } else {
+        // Create product
         const result = await repository.create(formProduct)
         if (result) {
           dispatch(addProduct(result))

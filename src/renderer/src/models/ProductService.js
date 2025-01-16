@@ -13,14 +13,14 @@ export default class ProductService {
     return result
   }
 
+  /**
+   * Get a list of products with pagination
+   * @param {number} from Starting index
+   * @param {number} size Number of products to get
+   * @returns {Promise<Product[]>} List of products
+   */
   async get(from = 0, size = 2) {
     const result = await window.api.getProducts(from, size)
-    this.list = result
-    return result
-  }
-
-  async getPage(page, limit) {
-    const result = await window.api.getProductsPage(page, limit)
     this.list = result
     return result
   }
