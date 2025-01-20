@@ -2,12 +2,12 @@
 import { Button, Card, Container } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { deleteProduct } from '../redux/productsSlice'
-import { useNavigate } from 'react-router-dom'
+import Navigation from '../helpers/Navigation'
 
 export default function ProductListItem({ productId }) {
-  const product = useSelector((state) => state.products.list.find((p) => p.id === productId))
+  const nav = new Navigation()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const product = useSelector((state) => state.products.list.find((p) => p.id === productId))
 
   const handleDelete = async (event) => {
     event.stopPropagation()
@@ -19,12 +19,12 @@ export default function ProductListItem({ productId }) {
 
   const handleEdit = (event) => {
     event.stopPropagation()
-    navigate(`/edit/${product.id}`)
+    nav.productEdit(product.id)
   }
 
   const handleDetails = (event) => {
     event.stopPropagation()
-    navigate(`/detail/${product.id}`)
+    nav.productDetail(product.id)
   }
 
   return (

@@ -1,6 +1,8 @@
 import { join } from 'path'
+import fs from 'fs'
 import SimpleJsonStorage from './SimpleJsonStorage'
 import BaseProductRepository from './BaseProductRepository'
+import ImageUtil from '../utils/ImageUtil'
 
 /**
  * Local product service
@@ -8,11 +10,16 @@ import BaseProductRepository from './BaseProductRepository'
  */
 export default class LocalProductRepository extends BaseProductRepository {
   constructor(app) {
-    super()
+    super(app)
     const userAppDir = app.getPath('userData')
     const file = 'products.json'
     this.SimpleJsonStorage = new SimpleJsonStorage(join(userAppDir, file))
     this.products = []
+    this.imagePath = join(userAppDir, 'productImages')
+    // create image directory
+    if (!fs.existsSync(this.imagePath)) {
+      fs.mkdirSync(this.imagePath, { recursive: true })
+    }
   }
 
   /**
@@ -46,6 +53,14 @@ export default class LocalProductRepository extends BaseProductRepository {
    */
   async create(product) {
     product.id = crypto.randomUUID()
+    if (product.imageBase64) {
+      // convert base64 to file and get the path
+      const imagePath = join(this.imagePath, `${product.id}.webp`)
+      await ImageUtil.base64ToFile(product.imageBase64, imagePath)
+      product.image = imagePath
+    }
+    product.imageBase64 = null
+    delete product.updatedImage
     this.products.push(product)
     await this.save()
     return product
@@ -58,6 +73,25 @@ export default class LocalProductRepository extends BaseProductRepository {
    */
   async update(product) {
     const index = this.products.findIndex((p) => p.id === product.id)
+    if (index === -1) {
+      throw new Error('Product not found')
+    }
+    if (product.updatedImage) {
+      if (product.imageBase64) {
+        // convert base64 to file and get the path
+        const imagePath = join(this.imagePath, `${product.id}.webp`)
+        await ImageUtil.base64ToFile(product.imageBase64, imagePath)
+        product.image = imagePath
+      } else {
+        if (product.image) {
+          // delete image
+          fs.unlinkSync(product.image)
+        }
+        product.image = null
+      }
+    }
+    product.imageBase64 = null
+    delete product.updatedImage
     this.products[index] = product
     await this.save()
     return product

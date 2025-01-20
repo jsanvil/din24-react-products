@@ -14,6 +14,12 @@ const api = {
   },
   deleteProduct: async (product) => {
     return await ipcRenderer.invoke('delete-product', product)
+  },
+  chooseImageFile: async () => {
+    return await ipcRenderer.invoke('choose-image-file')
+  },
+  getImage: async (imagePath) => {
+    return await ipcRenderer.invoke('read-image-file', imagePath)
   }
 }
 

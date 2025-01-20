@@ -10,10 +10,7 @@ export default function MainList() {
       <Button variant="primary" onClick={() => navigate('/create')}>
         Crear producto
       </Button>
-      {/* <Container fluid className="d-flex gap-3 flex-wrap my-3">
-      <Container fluid className="product-list my-3"> */}
       <ProductList />
-      {/* </Container> */}
     </Container>
   )
 }

@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import LocalProductRepository from './repository/LocalProductRepository'
+import ImageUtil from './utils/ImageUtil'
 
 function createWindow() {
   // Create the browser window.
@@ -119,4 +120,20 @@ ipcMain.handle('add-product', async (_, product) => {
 
 ipcMain.handle('update-product', async (_, product) => {
   return await productRepository.update(product)
+})
+
+ipcMain.handle('choose-image-file', async (event) => {
+  const window = BrowserWindow.fromWebContents(event.sender)
+  const result = await dialog.showOpenDialog(window, {
+    properties: ['openFile'],
+    filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png'] }]
+  })
+
+  if (!result.canceled) {
+    return await ImageUtil.resize(result.filePaths[0], 600, 400)
+  }
+})
+
+ipcMain.handle('read-image-file', async (event, imagePath) => {
+  return await ImageUtil.fileToBase64(imagePath)
 })

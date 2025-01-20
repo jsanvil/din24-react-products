@@ -4,6 +4,10 @@
  * @abstract
  */
 export default class BaseProductRepository {
+  constructor(app) {
+    this.app = app
+  }
+
   /**
    * Get all products
    * @returns {Array} List of products
