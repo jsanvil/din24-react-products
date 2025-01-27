@@ -6,9 +6,11 @@ import ProductService from './models/ProductService'
 
 import './assets/main.css'
 
+import AppHeader from './components/AppHeader'
 import MainList from './components/MainList'
 import ProductForm from './components/ProductForm'
 import ProductDetail from './components/ProductDetail'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   const dispatch = useDispatch()
@@ -25,14 +27,18 @@ function App() {
   }, [])
 
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<MainList />} />
-        <Route path="/create" element={<ProductForm />} />
-        <Route path="/detail/:id" element={<ProductDetail />} />
-        <Route path="/edit/:id" element={<ProductForm />} />
-      </Routes>
-    </HashRouter>
+    <>
+      <AppHeader />
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<MainList />} />
+          <Route path="/create" element={<ProductForm />} />
+          <Route path="/detail/:id" element={<ProductDetail />} />
+          <Route path="/edit/:id" element={<ProductForm />} />
+        </Routes>
+      </HashRouter>
+      <ToastContainer position="bottom-right" autoClose="2000" />
+    </>
   )
 }
 

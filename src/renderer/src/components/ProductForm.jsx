@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import ProductService from '../models/ProductService'
 import GoMainListButton from './GoMainListButton'
 import Navigation from '../helpers/Navigation'
+import { toast } from 'react-toastify'
 
 export default function ProductForm() {
   const repository = new ProductService()
@@ -57,15 +58,21 @@ export default function ProductForm() {
 
       if (id) {
         // Update product
-        const result = await repository.update(formProduct)
+        const result = await repository.update(formProduct).catch(() => {
+          toast.error(`Error al actualizar el producto`, { toastId: 'update-product' })
+        })
         if (result) {
           dispatch(updateProduct(result))
+          toast.success(`Producto actualizado: "${formProduct.name}"`, {
+            toastId: 'update-product'
+          })
         }
       } else {
         // Create product
         const result = await repository.create(formProduct)
         if (result) {
           dispatch(addProduct(result))
+          toast.success(`Producto creado: "${formProduct.name}"`, { toastId: 'create-product' })
         }
       }
 
@@ -87,7 +94,6 @@ export default function ProductForm() {
 
   return (
     <Container>
-      <h1>{id ? 'Editando Producto' : 'Nuevo Producto'}</h1>
       <GoMainListButton />
       <Form
         noValidate

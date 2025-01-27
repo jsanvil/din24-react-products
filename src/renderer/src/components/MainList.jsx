@@ -1,13 +1,13 @@
-import { useNavigate } from 'react-router-dom'
 import { Button, Container } from 'react-bootstrap'
 import ProductList from './ProductList'
+import Navigation from '../helpers/Navigation'
 
 export default function MainList() {
-  const navigate = useNavigate()
+  const nav = new Navigation()
+
   return (
     <Container className="my-3">
-      <h1>Gestión de productos</h1>
-      <Button variant="primary" onClick={() => navigate('/create')}>
+      <Button variant="primary" onClick={() => nav.newProduct()}>
         Crear producto
       </Button>
       <ProductList />

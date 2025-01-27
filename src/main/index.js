@@ -122,6 +122,8 @@ ipcMain.handle('update-product', async (_, product) => {
   return await productRepository.update(product)
 })
 
+const imageUtil = new ImageUtil()
+
 ipcMain.handle('choose-image-file', async (event) => {
   const window = BrowserWindow.fromWebContents(event.sender)
   const result = await dialog.showOpenDialog(window, {
@@ -130,10 +132,10 @@ ipcMain.handle('choose-image-file', async (event) => {
   })
 
   if (!result.canceled) {
-    return await ImageUtil.resize(result.filePaths[0], 600, 400)
+    return await imageUtil.resize(result.filePaths[0], 600, 400)
   }
 })
 
 ipcMain.handle('read-image-file', async (event, imagePath) => {
-  return await ImageUtil.fileToBase64(imagePath)
+  return await imageUtil.fileToBase64(imagePath)
 })

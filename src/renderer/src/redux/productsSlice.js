@@ -13,11 +13,8 @@ const productsSlice = createSlice({
       state.list = action.payload
     },
     addProducts(state, action) {
-      // state.list = state.list.concat(action.payload)
       const products = action.payload
-      console.log('current:', state.list)
-      console.log('to add:', products)
-
+      // compare the products in the payload with the products in the state
       products.forEach((product) => {
         state.list.find((p) => p.id === product.id) || state.list.push(product)
       })

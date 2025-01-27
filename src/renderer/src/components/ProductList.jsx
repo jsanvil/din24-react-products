@@ -3,6 +3,7 @@ import { addProducts } from '../redux/productsSlice'
 import ProductService from '../models/ProductService'
 import ProductListItem from './ProductListItem'
 import { Container, Button } from 'react-bootstrap'
+import { toast } from 'react-toastify'
 
 export default function ProductList() {
   const productList = useSelector((state) => state.products.list)
@@ -12,9 +13,19 @@ export default function ProductList() {
   const loadMore = async () => {
     const from = productList.length
     const size = 2
-    await repository.get(from, size).then((result) => {
-      dispatch(addProducts(result))
-    })
+
+    await repository
+      .get(from, size)
+      .then((result) => {
+        if (result.length === 0) {
+          toast.info(`No hay más productos para mostrar`, { toastId: 'get-products' })
+          return
+        }
+        dispatch(addProducts(result))
+      })
+      .error(() => {
+        toast.error(`Error al obtener los productos`, { toastId: 'get-products' })
+      })
   }
 
   return (

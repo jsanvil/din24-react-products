@@ -20,6 +20,7 @@ export default class LocalProductRepository extends BaseProductRepository {
     if (!fs.existsSync(this.imagePath)) {
       fs.mkdirSync(this.imagePath, { recursive: true })
     }
+    this.imageUtil = new ImageUtil()
   }
 
   /**
@@ -56,7 +57,7 @@ export default class LocalProductRepository extends BaseProductRepository {
     if (product.imageBase64) {
       // convert base64 to file and get the path
       const imagePath = join(this.imagePath, `${product.id}.webp`)
-      await ImageUtil.base64ToFile(product.imageBase64, imagePath)
+      await this.imageUtil.base64ToFile(product.imageBase64, imagePath)
       product.image = imagePath
     }
     product.imageBase64 = null
@@ -80,7 +81,7 @@ export default class LocalProductRepository extends BaseProductRepository {
       if (product.imageBase64) {
         // convert base64 to file and get the path
         const imagePath = join(this.imagePath, `${product.id}.webp`)
-        await ImageUtil.base64ToFile(product.imageBase64, imagePath)
+        await this.imageUtil.base64ToFile(product.imageBase64, imagePath)
         product.image = imagePath
       } else {
         if (product.image) {

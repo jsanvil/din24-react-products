@@ -1,28 +1,32 @@
 import sharp from 'sharp'
 
 export default class ImageUtil {
-  static async resize(imagePath, width, height) {
+  constructor() {
+    sharp.cache(false)
+  }
+
+  async resize(imagePath, width, height) {
     let image = sharp(imagePath)
-    // resize if image is larger than the specified dimensions
-    if (image.width > width || image.height > height) {
-      image = await image.resize(width, height, { fit: 'inside' })
-    }
+    image = await image.resize(width, height, { fit: 'inside', withoutEnlargement: true })
     const result = await image.toFormat('webp').toBuffer()
     return result.toString('base64')
   }
 
-  static async toFile(imageBuffer, outputPath, format = 'webp') {
-    const image = sharp(imageBuffer)
-    return await image.toFormat(format).toFile(outputPath)
+  async toFile(imageBuffer, outputPath, format = 'webp') {
+    let image = sharp(imageBuffer)
+    const output = await image.toFormat(format).toFile(outputPath)
+    return output
   }
 
-  static async base64ToFile(base64, outputPath) {
-    const buffer = Buffer.from(base64, 'base64')
-    return await ImageUtil.toFile(buffer, outputPath)
+  async base64ToFile(base64, outputPath) {
+    let buffer = Buffer.from(base64, 'base64')
+    const out = await this.toFile(buffer, outputPath)
+    return out
   }
 
-  static async fileToBase64(filePath) {
-    const buffer = await sharp(filePath).toBuffer()
-    return buffer.toString('base64')
+  async fileToBase64(filePath) {
+    let buffer = await sharp(filePath).toBuffer()
+    const base64String = buffer.toString('base64')
+    return base64String
   }
 }

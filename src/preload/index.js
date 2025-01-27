@@ -4,22 +4,42 @@ import { electronAPI } from '@electron-toolkit/preload'
 // Custom APIs for renderer
 const api = {
   getProducts: async (from, size) => {
-    return await ipcRenderer.invoke('get-products', from, size)
+    try {
+      return await ipcRenderer.invoke('get-products', from, size)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
   },
   addProduct: async (product) => {
-    return await ipcRenderer.invoke('add-product', product)
+    return await ipcRenderer.invoke('add-product', product).catch((error) => {
+      console.error(error)
+      throw error
+    })
   },
   updateProduct: async (product) => {
-    return await ipcRenderer.invoke('update-product', product)
+    return await ipcRenderer.invoke('update-product', product).catch((error) => {
+      console.error(error)
+      throw error
+    })
   },
   deleteProduct: async (product) => {
-    return await ipcRenderer.invoke('delete-product', product)
+    return await ipcRenderer.invoke('delete-product', product).catch((error) => {
+      console.error(error)
+      throw error
+    })
   },
   chooseImageFile: async () => {
-    return await ipcRenderer.invoke('choose-image-file')
+    return await ipcRenderer.invoke('choose-image-file').catch((error) => {
+      console.error(error)
+      throw error
+    })
   },
   getImage: async (imagePath) => {
-    return await ipcRenderer.invoke('read-image-file', imagePath)
+    return await ipcRenderer.invoke('read-image-file', imagePath).catch((error) => {
+      console.error(error)
+      throw error
+    })
   }
 }
 
