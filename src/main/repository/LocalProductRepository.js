@@ -4,6 +4,17 @@ import SimpleJsonStorage from './SimpleJsonStorage'
 import BaseProductRepository from './BaseProductRepository'
 import ImageUtil from '../utils/ImageUtil'
 
+const DELAY_ENABLED = true
+
+async function randomTimeout() {
+  if (!DELAY_ENABLED) {
+    return
+  }
+  return new Promise((resolve) => {
+    setTimeout(resolve, Math.random() * 3 * 1000)
+  })
+}
+
 /**
  * Local product service
  * @extends BaseProductRepository
@@ -28,10 +39,12 @@ export default class LocalProductRepository extends BaseProductRepository {
    * @returns {Promise<void>}
    */
   async load() {
+    await randomTimeout()
     this.products = await this.SimpleJsonStorage.read()
   }
 
   async save() {
+    await randomTimeout()
     await this.SimpleJsonStorage.write(this.products)
   }
 
@@ -40,10 +53,12 @@ export default class LocalProductRepository extends BaseProductRepository {
    * @returns {Promise<Product[]>} List of products
    */
   async getAll() {
+    await randomTimeout()
     return this.products
   }
 
   async get(from = 0, size = 2) {
+    await randomTimeout()
     return this.products.slice(from, from + size)
   }
 
@@ -53,6 +68,7 @@ export default class LocalProductRepository extends BaseProductRepository {
    * @returns {Promise<Product>} Product created
    */
   async create(product) {
+    await randomTimeout()
     product.id = crypto.randomUUID()
     if (product.imageBase64) {
       // convert base64 to file and get the path
@@ -73,6 +89,7 @@ export default class LocalProductRepository extends BaseProductRepository {
    * @returns {Promise<Product>} Product updated
    */
   async update(product) {
+    await randomTimeout()
     const index = this.products.findIndex((p) => p.id === product.id)
     if (index === -1) {
       throw new Error('Product not found')
@@ -104,6 +121,7 @@ export default class LocalProductRepository extends BaseProductRepository {
    * @returns {Promise<void>}
    */
   async delete(id) {
+    await randomTimeout()
     this.products = this.products.filter((p) => p.id !== id)
     await this.save()
   }
@@ -114,6 +132,7 @@ export default class LocalProductRepository extends BaseProductRepository {
    * @returns {Promise<Product>} Product
    */
   async getById(id) {
+    await randomTimeout()
     return this.products.find((p) => p.id === id)
   }
 }

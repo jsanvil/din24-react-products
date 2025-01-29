@@ -20,9 +20,12 @@ export default class ProductService {
    * @returns {Promise<Product[]>} List of products
    */
   async get(from = 0, size = 2) {
-    const result = await window.api.getProducts(from, size)
-    this.list = result
-    return result
+    let resultList
+    await window.api.getProducts(from, size).then((result) => {
+      this.list = this.list.concat(result)
+      resultList = result
+    })
+    return resultList
   }
 
   /**

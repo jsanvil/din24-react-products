@@ -8,6 +8,8 @@ import ProductService from '../models/ProductService'
 import GoMainListButton from './GoMainListButton'
 import Navigation from '../helpers/Navigation'
 import { toast } from 'react-toastify'
+import Loading from '../helpers/Loading'
+import { setLoading } from '../redux/appSlice'
 
 export default function ProductForm() {
   const repository = new ProductService()
@@ -22,6 +24,8 @@ export default function ProductForm() {
   const [updatedImage, setUpdatedImage] = useState(false)
 
   const [validated, setValidated] = useState(false)
+
+  const loadingMsg = new Loading(dispatch, setLoading)
 
   useEffect(() => {
     if (product?.image) {
@@ -57,6 +61,7 @@ export default function ProductForm() {
       }
 
       if (id) {
+        loadingMsg.showLoadingMsg('Actualizando producto')
         // Update product
         const result = await repository.update(formProduct).catch(() => {
           toast.error(`Error al actualizar el producto`, { toastId: 'update-product' })
@@ -68,6 +73,7 @@ export default function ProductForm() {
           })
         }
       } else {
+        loadingMsg.showLoadingMsg('Creando producto')
         // Create product
         const result = await repository.create(formProduct)
         if (result) {
@@ -75,6 +81,8 @@ export default function ProductForm() {
           toast.success(`Producto creado: "${formProduct.name}"`, { toastId: 'create-product' })
         }
       }
+
+      loadingMsg.hideLoadingMsg()
 
       form.reset()
       setValidated(false)
