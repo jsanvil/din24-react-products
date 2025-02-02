@@ -2,13 +2,44 @@ import { createSlice } from '@reduxjs/toolkit'
 import Product from '../models/Product'
 
 const initialState = {
-  list: []
+  list: [],
+  filters: {
+    search: '',
+    sort: {
+      field: '',
+      order: 'asc'
+    },
+    priceRange: {
+      min: 0,
+      max: 1000
+    }
+  }
 }
 
 const productsSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {
+    filterSearch(state, action) {
+      state.filters.search = action.payload
+    },
+    sortByField(state, action) {
+      state.filters.sort = action.payload
+    },
+    // setPriceRangeMin(state, action) {
+    //   state.filters.priceRange.min = action.payload
+    // },
+    // setPriceRangeMax(state, action) {
+    //   state.filters.priceRange.max = action.payload
+    // },
+    filterPriceRange(state, action) {
+      const [min, max] = action.payload
+      state.filters.priceRange.min = min
+      state.filters.priceRange.max = max
+    },
+    resetFilters(state) {
+      state.filters = initialState.filters
+    },
     setProducts(state, action) {
       state.list = action.payload
     },
@@ -37,6 +68,15 @@ const productsSlice = createSlice({
   }
 })
 
-export const { setProducts, addProducts, clearProducts, addProduct, updateProduct, deleteProduct } =
-  productsSlice.actions
+export const {
+  setProducts,
+  addProducts,
+  clearProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+  filterPriceRange,
+  filterSearch,
+  sortByField
+} = productsSlice.actions
 export default productsSlice.reducer

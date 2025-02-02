@@ -14,7 +14,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (!product) {
-      nav.productList()
+      nav.mainList()
     }
 
     const getBase64Image = async () => {
