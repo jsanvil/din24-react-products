@@ -23,9 +23,9 @@ export default class ProductService {
     return result
   }
 
-  async loadMore(from, size) {
+  async loadMore(from, size, filters = {}) {
     store.dispatch(setLoadingMore(true))
-    const result = await window.api.getProducts(from, size).finally(() => {
+    const result = await window.api.getProducts(from, size, filters).finally(() => {
       store.dispatch(setLoadingMore(false))
     })
     store.dispatch(addProducts(result))
@@ -46,7 +46,6 @@ export default class ProductService {
     })
 
     if (result) {
-      // this.list = result
       store.dispatch(setProducts(result))
     }
   }

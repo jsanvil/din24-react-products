@@ -29,17 +29,8 @@ function App() {
   // first time load
   useEffect(() => {
     const init = async () => {
-      // get products from persistent storage
-      loadingMsg.showLoadingMsg()
-      await productService
-        .get()
-        .then((result) => {
-          console.log('result', result)
-          dispatch(setProducts(result))
-        })
-        .finally(() => {
-          loadingMsg.hideLoadingMsg()
-        })
+      // get products from  storage
+      await productService.get()
     }
 
     init()

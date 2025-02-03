@@ -17,7 +17,6 @@ export default function ProductListSearch() {
     }
 
     await productService.get(0, 5, { search: searchText }).then((result) => {
-      console.log('search result', result)
       dispatch(setProducts(result))
     })
   }

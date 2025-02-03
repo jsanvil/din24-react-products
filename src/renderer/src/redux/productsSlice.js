@@ -26,12 +26,6 @@ const productsSlice = createSlice({
     sortByField(state, action) {
       state.filters.sort = action.payload
     },
-    // setPriceRangeMin(state, action) {
-    //   state.filters.priceRange.min = action.payload
-    // },
-    // setPriceRangeMax(state, action) {
-    //   state.filters.priceRange.max = action.payload
-    // },
     filterPriceRange(state, action) {
       const [min, max] = action.payload
       state.filters.priceRange.min = min

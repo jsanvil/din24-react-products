@@ -30,13 +30,10 @@ export default function ProductListFilters() {
   const productService = new ProductService()
 
   useEffect(() => {
-    console.log('useEffect priceRange', priceMin, priceMax)
     priceMin
     priceMax
     const hasMin = priceMin > PRICE_RANGE_MIN
     const hasMax = priceMax < PRICE_RANGE_MAX
-
-    console.log('min', priceMin, 'max', priceMax)
 
     let label = ''
 

@@ -16,7 +16,6 @@ export default function ProductList() {
     const size = 5
 
     const result = await repository.loadMore(from, size)
-    console.log('result', result)
 
     if (result.length === 0) {
       toast.info(`No hay más productos para mostrar`, { toastId: 'get-products' })
