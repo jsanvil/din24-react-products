@@ -22,7 +22,7 @@ import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
   const dispatch = useDispatch()
-  const repository = new ProductService()
+  const productService = new ProductService()
   const loadingMsg = new Loading(dispatch, setLoading)
   const loadingState = useSelector((state) => state.app.loading)
 
@@ -31,10 +31,10 @@ function App() {
     const init = async () => {
       // get products from persistent storage
       loadingMsg.showLoadingMsg()
-      await repository
+      await productService
         .get()
         .then((result) => {
-          // update redux store
+          console.log('result', result)
           dispatch(setProducts(result))
         })
         .finally(() => {

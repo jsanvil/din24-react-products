@@ -3,9 +3,9 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  getProducts: async (from, size) => {
+  getProducts: async (from, size, filters) => {
     try {
-      return await ipcRenderer.invoke('get-products', from, size)
+      return await ipcRenderer.invoke('get-products', from, size, filters)
     } catch (error) {
       console.error(error)
       throw error

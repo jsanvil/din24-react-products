@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import LocalProductRepository from './repository/LocalProductRepository'
 import ImageUtil from './utils/ImageUtil'
+import ApiProductRepository from './repository/ApiProductRepository'
 
 function createWindow() {
   // Create the browser window.
@@ -78,8 +79,10 @@ app.on('window-all-closed', async () => {
 let productRepository
 
 async function initStorage() {
-  productRepository = new LocalProductRepository(app)
-  await productRepository.load()
+  // productRepository = new LocalProductRepository(app)
+  // await productRepository.load()
+
+  productRepository = new ApiProductRepository(app)
 }
 
 // In this file you can include the rest of your app"s specific main process
@@ -110,8 +113,8 @@ ipcMain.handle('delete-product', async (event, product) => {
     })
 })
 
-ipcMain.handle('get-products', async (_, from, size) => {
-  return await productRepository.get(from, size)
+ipcMain.handle('get-products', async (_, from, size, filters) => {
+  return await productRepository.get(from, size, filters)
 })
 
 ipcMain.handle('add-product', async (_, product) => {

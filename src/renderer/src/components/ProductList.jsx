@@ -4,23 +4,19 @@ import ProductService from '../models/ProductService'
 import ProductListItem from './ProductListItem'
 import { Container, Button, Spinner } from 'react-bootstrap'
 import { toast } from 'react-toastify'
-import { setLoadingMore } from '../redux/appSlice'
 
 export default function ProductList() {
   const productList = useSelector((state) => state.products.list)
   const repository = new ProductService()
   const dispatch = useDispatch()
-  const { loadingMore } = useSelector((state) => state.app.loading)
+  const loadingMore = useSelector((state) => state.app.loading.loadingMore)
 
   const loadMore = async () => {
     const from = productList.length
-    const size = 2
+    const size = 5
 
-    dispatch(setLoadingMore(true))
-
-    const result = await repository.get(from, size)
-
-    dispatch(setLoadingMore(false))
+    const result = await repository.loadMore(from, size)
+    console.log('result', result)
 
     if (result.length === 0) {
       toast.info(`No hay más productos para mostrar`, { toastId: 'get-products' })

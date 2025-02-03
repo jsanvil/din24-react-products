@@ -20,9 +20,13 @@ const appSlice = createSlice({
     },
     setLoadingMore(state, action) {
       state.loading.loadingMore = action.payload
+    },
+    hideLoading(state) {
+      state.loading.status = false
+      state.loading.loadingMore = false
     }
   }
 })
 
-export const { setTitle, setLoading, setLoadingMore } = appSlice.actions
+export const { setTitle, setLoading, setLoadingMore, hideLoading } = appSlice.actions
 export default appSlice.reducer

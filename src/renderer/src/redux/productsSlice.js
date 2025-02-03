@@ -77,6 +77,6 @@ export const {
   deleteProduct,
   filterPriceRange,
   filterSearch,
-  sortByField
+  sortByField,
 } = productsSlice.actions
 export default productsSlice.reducer

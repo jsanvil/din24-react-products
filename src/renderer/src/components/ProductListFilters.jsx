@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Form } from 'react-bootstrap'
 import Slider from '@mui/material/Slider'
 import { filterPriceRange, filterSearch, sortByField } from '../redux/productsSlice'
+import ProductService from '../models/ProductService'
 
 export default function ProductListFilters() {
   const PRICE_RANGE_MIN = 0
@@ -25,6 +26,8 @@ export default function ProductListFilters() {
   const sort = useSelector((state) => state.products.filters)
   const { min: priceMin, max: priceMax } = useSelector((state) => state.products.filters.priceRange)
   const [priceRangeLabel, setPriceRangeLabel] = useState('')
+
+  const productService = new ProductService()
 
   useEffect(() => {
     console.log('useEffect priceRange', priceMin, priceMax)
@@ -57,12 +60,16 @@ export default function ProductListFilters() {
     dispatch(filterPriceRange([min, max]))
   }
 
-  const handleSort = (e) => {}
+  const handleSort = async (e) => {
+    await productService.get(0, 5, { sort: e.target.value }).then((result) => {
+      dispatch(sortByField(e.target.value))
+    })
+  }
 
   return (
     <div className="p-3">
       <h3>Filtros</h3>
-      <Form>
+      <Form onSubmit={(e) => e.preventDefault()}>
         <Form.Group className="mb-3">
           <Form.Select onChange={handleSort}>
             <option value="">Ordenar...</option>

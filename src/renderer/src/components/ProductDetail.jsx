@@ -18,14 +18,14 @@ export default function ProductDetail() {
     }
 
     const getBase64Image = async () => {
-      await window.api
-        .getImage(product.image)
-        .then((base64data) => {
-          setImageBase64(base64data)
-        })
-        .catch(() => {
-          toast.error(`Error al obtener la imagen`, { toastId: 'get-image' })
-        })
+      // await window.api
+      //   .getImage(product.image)
+      //   .then((base64data) => {
+      //     setImageBase64(base64data)
+      //   })
+      //   .catch(() => {
+      //     toast.error(`Error al obtener la imagen`, { toastId: 'get-image' })
+      //   })
     }
 
     if (product?.image) {

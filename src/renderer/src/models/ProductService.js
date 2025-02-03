@@ -1,6 +1,17 @@
+// import redux
+import { store } from '../redux/store'
+import { setLoading, hideLoading, setLoadingMore } from '../redux/appSlice'
+import { setProducts, addProducts, deleteProduct, updateProduct } from '../redux/productsSlice'
+
 export default class ProductService {
-  constructor() {
-    this.list = []
+  constructor() {}
+
+  showLoading(message = 'Cargando...') {
+    store.dispatch(setLoading({ status: true, text: message }))
+  }
+
+  hideLoading() {
+    store.dispatch(hideLoading())
   }
 
   /**
@@ -9,7 +20,16 @@ export default class ProductService {
    */
   async getAll() {
     const result = await window.api.getProducts()
-    this.list = result
+    return result
+  }
+
+  async loadMore(from, size) {
+    store.dispatch(setLoadingMore(true))
+    const result = await window.api.getProducts(from, size).finally(() => {
+      store.dispatch(setLoadingMore(false))
+    })
+    store.dispatch(addProducts(result))
+    // this.list = this.list.concat(result)
     return result
   }
 
@@ -19,13 +39,16 @@ export default class ProductService {
    * @param {number} size Number of products to get
    * @returns {Promise<Product[]>} List of products
    */
-  async get(from = 0, size = 2) {
-    let resultList
-    await window.api.getProducts(from, size).then((result) => {
-      this.list = this.list.concat(result)
-      resultList = result
+  async get(from = 0, size = 5, filters = {}) {
+    this.showLoading()
+    const result = await window.api.getProducts(from, size, filters).finally(() => {
+      this.hideLoading()
     })
-    return resultList
+
+    if (result) {
+      // this.list = result
+      store.dispatch(setProducts(result))
+    }
   }
 
   /**
@@ -47,7 +70,8 @@ export default class ProductService {
     const result = await window.api.deleteProduct(product)
 
     if (result) {
-      this.list = this.list.filter((p) => p.id !== product.id)
+      // this.list = this.list.filter((p) => p.id !== product.id)
+      store.dispatch(deleteProduct(product))
     }
   }
 
@@ -60,7 +84,8 @@ export default class ProductService {
     const result = await window.api.updateProduct(product)
 
     if (result) {
-      this.list = this.list.map((p) => (p.id === product.id ? product : p))
+      // this.list = this.list.map((p) => (p.id === product.id ? product : p))
+      store.dispatch(updateProduct(product))
     }
 
     return result
