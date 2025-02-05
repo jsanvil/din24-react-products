@@ -83,6 +83,7 @@ export default class ProductService {
     console.log('Product created', result)
 
     if (result) {
+      toast.success('Producto creado correctamente', { toastId: 'create-product' })
       store.dispatch(addProducts([result]))
     }
 
@@ -100,6 +101,7 @@ export default class ProductService {
     await this.api
       .deleteProduct(product)
       .then(() => {
+        toast.success('Producto eliminado correctamente', { toastId: 'delete-product' })
         store.dispatch(deleteProduct(product))
       })
       .catch(() => {
@@ -122,15 +124,14 @@ export default class ProductService {
     const [result] = await this.api
       .updateProduct(product)
       .catch(() => {
-        toast.error('Error al crear el producto', { toastId: 'create-product' })
+        toast.error('Error al actualizar el producto', { toastId: 'update-product' })
       })
       .finally(() => {
         this.hideLoading()
       })
 
-    console.log('Product created', result)
-
     if (result) {
+      toast.success('Producto actualizado correctamente', { toastId: 'update-product' })
       store.dispatch(updateProduct(result))
     }
 
