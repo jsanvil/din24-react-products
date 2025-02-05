@@ -1,7 +1,13 @@
 // import redux
 import { store } from '../redux/store'
 import { setLoading, hideLoading, setLoadingMore } from '../redux/appSlice'
-import { setProducts, addProducts, deleteProduct, updateProduct } from '../redux/productsSlice'
+import {
+  setProducts,
+  addProducts,
+  addProduct,
+  deleteProduct,
+  updateProduct
+} from '../redux/productsSlice'
 import { toast } from 'react-toastify'
 
 const LIMIT = 5
@@ -70,8 +76,10 @@ export default class ProductService {
    */
   async create(product) {
     console.log('Creating product', product)
+
     this.showLoading('Creando producto')
-    const [result] = await this.api
+
+    const data = await this.api
       .addProduct(product)
       .catch(() => {
         toast.error('Error al crear el producto', { toastId: 'create-product' })
@@ -80,14 +88,18 @@ export default class ProductService {
         this.hideLoading()
       })
 
-    console.log('Product created', result)
+    console.log('Product created', data)
 
-    if (result) {
+    if (data?.errors) {
+      const error = await data.errors[0]
+      console.error('Error creating product', error)
+      toast.error(getErrorMessage(error), { toastId: 'create-product' })
+    } else {
       toast.success('Producto creado correctamente', { toastId: 'create-product' })
-      store.dispatch(addProducts([result]))
+      store.dispatch(addProduct(data))
     }
 
-    return result
+    return data
   }
 
   /**
@@ -137,4 +149,138 @@ export default class ProductService {
 
     return result
   }
+}
+
+const ERRORS = {
+  queryFailed: {
+    error: 'query-failed',
+    message: 'Failed to execute query'
+  },
+  postDuplicated: {
+    error: 'post-duplicated',
+    message: 'Product already exists'
+  },
+  requiredFields: {
+    error: 'required-fields',
+    message: 'Name and price are required'
+  },
+  imageSize: {
+    error: 'image-size',
+    message: 'Image size must be less than 512KB'
+  },
+  imageInvalid: {
+    error: 'image-invalid',
+    message: 'Invalid image URL or base64 string'
+  },
+  getNotFound: {
+    error: 'get-not-found',
+    message: 'Product not found'
+  },
+  putNotFound: {
+    error: 'put-not-found',
+    message: 'Product not found'
+  },
+  deleteNotFound: {
+    error: 'delete-not-found',
+    message: 'Product not found'
+  },
+  invalidQuerySearch: {
+    error: 'invalid-query-search',
+    message: 'Invalid "search" query'
+  },
+  invalidQueryMinStock: {
+    error: 'invalid-query-min-stock',
+    message: 'Invalid "min_stock" query'
+  },
+  invalidQueryMinPrice: {
+    error: 'invalid-query-min-price',
+    message: 'Invalid "min_price" query'
+  },
+  invalidQueryMaxPrice: {
+    error: 'invalid-query-max-price',
+    message: 'Invalid "max_price" query'
+  },
+  invalidQueryMinDate: {
+    error: 'invalid-query-min-date',
+    message: 'Invalid "min_date" query'
+  },
+  invalidQueryMaxDate: {
+    error: 'invalid-query-max-date',
+    message: 'Invalid "max_date" query'
+  },
+  invalidQueryLimit: {
+    error: 'invalid-query-limit',
+    message: 'Invalid "limit" query'
+  },
+  invalidQueryOffset: {
+    error: 'invalid-query-offset',
+    message: 'Invalid "offset" query'
+  },
+  invalidQuerySort: {
+    error: 'invalid-query-sort',
+    message: 'Invalid "sort" query'
+  },
+  invalidQueryOrder: {
+    error: 'invalid-query-order',
+    message: 'Invalid "order" query'
+  }
+}
+
+const getErrorMessage = (e) => {
+  if (e.error === ERRORS.queryFailed.error) {
+    return 'Error al ejecutar la consulta'
+  }
+  if (e.error === ERRORS.postDuplicated.error) {
+    return 'El producto ya existe'
+  }
+  if (e.error === ERRORS.requiredFields.error) {
+    return 'Nombre y precio son requeridos'
+  }
+  if (e.error === ERRORS.imageSize.error) {
+    return 'El tamaño de la imagen debe ser menor a 512KB'
+  }
+  if (e.error === ERRORS.imageInvalid.error) {
+    return 'URL de imagen o cadena base64 inválida'
+  }
+  if (e.error === ERRORS.getNotFound.error) {
+    return 'Producto no encontrado'
+  }
+  if (e.error === ERRORS.putNotFound.error) {
+    return 'Producto no encontrado'
+  }
+  if (e.error === ERRORS.deleteNotFound.error) {
+    return 'Producto no encontrado'
+  }
+  if (e.error === ERRORS.invalidQuerySearch.error) {
+    return 'Consulta de búsqueda no inválida'
+  }
+  if (e.error === ERRORS.invalidQueryMinStock.error) {
+    return 'Consulta Stock mínimo no válida'
+  }
+  if (e.error === ERRORS.invalidQueryMinPrice.error) {
+    return 'Consulta Precio mínimo no válida'
+  }
+  if (e.error === ERRORS.invalidQueryMaxPrice.error) {
+    return 'Consulta Precio máximo no válida'
+  }
+  if (e.error === ERRORS.invalidQueryMinDate.error) {
+    return 'Consulta Fecha mínima no válida'
+  }
+  if (e.error === ERRORS.invalidQueryMaxDate.error) {
+    return 'Consulta Fecha máxima no válida'
+  }
+  if (e.error === ERRORS.invalidQueryLimit.error) {
+    return 'Consulta de límite no válida'
+  }
+  if (e.error === ERRORS.invalidQueryOffset.error) {
+    return 'Consulta de offset no válida'
+  }
+  if (e.error === ERRORS.invalidQuerySort.error) {
+    return 'Consulta de ordenación no válida'
+  }
+  if (e.error === ERRORS.invalidQueryOrder.error) {
+    return 'Consulta de sentido de ordenación no válida'
+  }
+
+  return 'Error desconocido'
 }

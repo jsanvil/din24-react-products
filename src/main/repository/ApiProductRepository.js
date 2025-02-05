@@ -91,7 +91,12 @@ export default class ApiProductRepository extends BaseProductRepository {
         ...AUTH_HEADER
       },
       body: JSON.stringify(product)
-    }).then((res) => res.json())
+    })
+      .then((res) => res.json())
+      .catch((error) => {
+        console.error('Error creating product', error)
+      })
+
     return data
   }
 
