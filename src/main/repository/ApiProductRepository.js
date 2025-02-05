@@ -37,6 +37,34 @@ export default class ApiProductRepository extends BaseProductRepository {
       params.append('search', filters.search)
     }
 
+    if (filters.sort.field) {
+      params.append('sort', filters.sort.field)
+
+      if (filters.sort.order) {
+        params.append('order', filters.sort.order)
+      }
+    }
+
+    if (filters.priceRange.min) {
+      params.append('min_price', filters.priceRange.min)
+    }
+
+    if (filters.priceRange.max && filters.priceRange.max < 1000) {
+      params.append('max_price', filters.priceRange.max)
+    }
+
+    if (filters.minStock) {
+      params.append('min_stock', filters.minStock)
+    }
+
+    if (filters.date.min) {
+      params.append('min_date', filters.date.min)
+    }
+
+    if (filters.date.max) {
+      params.append('max_date', filters.date.max)
+    }
+
     console.log('fetching', `${this.productsUrl}?${params}`)
 
     await fetch(`${this.productsUrl}?${params}`, {
@@ -44,7 +72,7 @@ export default class ApiProductRepository extends BaseProductRepository {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log('data', data)
+        console.log('Products', data)
         this.products = data.results
       })
     return this.products
@@ -64,7 +92,6 @@ export default class ApiProductRepository extends BaseProductRepository {
       },
       body: JSON.stringify(product)
     }).then((res) => res.json())
-    console.log('data', data)
     return data
   }
 
@@ -74,6 +101,7 @@ export default class ApiProductRepository extends BaseProductRepository {
    * @returns {Promise<Product>} Product updated
    */
   async update(product) {
+    console.log('Updating product', product)
     const data = await fetch(`${this.productsUrl}/${product.id}`, {
       method: 'PUT',
       headers: {
@@ -82,7 +110,7 @@ export default class ApiProductRepository extends BaseProductRepository {
       },
       body: JSON.stringify(product)
     }).then((res) => res.json())
-    console.log('data', data)
+
     return data
   }
 
@@ -110,7 +138,6 @@ export default class ApiProductRepository extends BaseProductRepository {
     const data = await fetch(`${this.productsUrl}/${id}`, {
       headers: AUTH_HEADER
     }).then((res) => res.json())
-    console.log('data', data)
     return data
   }
 }

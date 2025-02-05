@@ -1,27 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { addProducts } from '../redux/productsSlice'
+import { useSelector } from 'react-redux'
+import { Container, Button, Spinner } from 'react-bootstrap'
 import ProductService from '../models/ProductService'
 import ProductListItem from './ProductListItem'
-import { Container, Button, Spinner } from 'react-bootstrap'
-import { toast } from 'react-toastify'
 
 export default function ProductList() {
+  const service = new ProductService()
   const productList = useSelector((state) => state.products.list)
-  const repository = new ProductService()
-  const dispatch = useDispatch()
   const loadingMore = useSelector((state) => state.app.loading.loadingMore)
 
   const loadMore = async () => {
     const from = productList.length
     const size = 5
 
-    const result = await repository.loadMore(from, size)
-
-    if (result.length === 0) {
-      toast.info(`No hay más productos para mostrar`, { toastId: 'get-products' })
-      return
-    }
-    dispatch(addProducts(result))
+    await service.loadMore(from, size)
   }
 
   return (

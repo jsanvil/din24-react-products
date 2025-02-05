@@ -12,6 +12,11 @@ const initialState = {
     priceRange: {
       min: 0,
       max: 1000
+    },
+    minStock: 0,
+    date: {
+      min: '',
+      max: ''
     }
   }
 }
@@ -21,7 +26,7 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     filterSearch(state, action) {
-      state.filters.search = action.payload
+      state.filters.search = action.payload || ''
     },
     sortByField(state, action) {
       state.filters.sort = action.payload
@@ -30,6 +35,13 @@ const productsSlice = createSlice({
       const [min, max] = action.payload
       state.filters.priceRange.min = min
       state.filters.priceRange.max = max
+    },
+    filterDateRange(state, action) {
+      if (action.payload) state.filters.date.min = action.payload.min
+      if (action.payload) state.filters.date.max = action.payload.max
+    },
+    filterMinStock(state, action) {
+      state.filters.minStock = action.payload
     },
     resetFilters(state) {
       state.filters = initialState.filters
@@ -52,9 +64,9 @@ const productsSlice = createSlice({
       state.list.find((p) => p.id === product.id) || state.list.push(product)
     },
     updateProduct(state, action) {
+      console.log('status updateProduct', action.payload)
       const product = new Product(action.payload)
-      const index = state.list.findIndex((p) => p.id === product.id)
-      state.list[index] = product
+      state.list = state.list.map((p) => (p.id === product.id ? product : p))
     },
     deleteProduct(state, action) {
       state.list = state.list.filter((product) => product.id !== action.payload.id)
@@ -70,7 +82,9 @@ export const {
   updateProduct,
   deleteProduct,
   filterPriceRange,
+  filterDateRange,
+  filterMinStock,
   filterSearch,
-  sortByField,
+  sortByField
 } = productsSlice.actions
 export default productsSlice.reducer

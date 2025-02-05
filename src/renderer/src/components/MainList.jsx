@@ -19,7 +19,7 @@ export default function MainList() {
             variant="outline-primary"
             onClick={() => nav.newProduct()}
           >
-            <i className="bi bi-plus"></i> Nuevo producto
+            <i className="bi bi-plus"></i> Crear
           </Button>
         </Container>
         <ProductList />

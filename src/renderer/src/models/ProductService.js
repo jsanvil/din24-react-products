@@ -2,9 +2,14 @@
 import { store } from '../redux/store'
 import { setLoading, hideLoading, setLoadingMore } from '../redux/appSlice'
 import { setProducts, addProducts, deleteProduct, updateProduct } from '../redux/productsSlice'
+import { toast } from 'react-toastify'
+
+const LIMIT = 5
 
 export default class ProductService {
-  constructor() {}
+  constructor() {
+    this.api = window.api
+  }
 
   showLoading(message = 'Cargando...') {
     store.dispatch(setLoading({ status: true, text: message }))
@@ -14,23 +19,27 @@ export default class ProductService {
     store.dispatch(hideLoading())
   }
 
-  /**
-   * Get all products
-   * @returns {Promise<Product[]>} List of products
-   */
-  async getAll() {
-    const result = await window.api.getProducts()
-    return result
+  getFilters() {
+    return store.getState().products.filters
   }
 
-  async loadMore(from, size, filters = {}) {
+  async loadMore(from, size = LIMIT) {
     store.dispatch(setLoadingMore(true))
-    const result = await window.api.getProducts(from, size, filters).finally(() => {
-      store.dispatch(setLoadingMore(false))
-    })
-    store.dispatch(addProducts(result))
-    // this.list = this.list.concat(result)
-    return result
+    await this.api
+      .getProducts(from, size, this.getFilters())
+      .then((result) => {
+        if (result.length === 0) {
+          toast.info(`No hay más productos para mostrar`, { toastId: 'load-more-products' })
+          return
+        }
+        store.dispatch(addProducts(result))
+      })
+      .catch(() => {
+        toast.error('Error al cargar más productos', { toastId: 'load-more-products' })
+      })
+      .finally(() => {
+        store.dispatch(setLoadingMore(false))
+      })
   }
 
   /**
@@ -39,24 +48,44 @@ export default class ProductService {
    * @param {number} size Number of products to get
    * @returns {Promise<Product[]>} List of products
    */
-  async get(from = 0, size = 5, filters = {}) {
+  async getProducts(from = 0, size = LIMIT) {
     this.showLoading()
-    const result = await window.api.getProducts(from, size, filters).finally(() => {
-      this.hideLoading()
-    })
-
-    if (result) {
-      store.dispatch(setProducts(result))
-    }
+    await this.api
+      .getProducts(from, size, this.getFilters())
+      .then((result) => {
+        store.dispatch(setProducts(result))
+      })
+      .catch(() => {
+        toast.error('Error al cargar los productos', { toastId: 'get-products' })
+      })
+      .finally(() => {
+        this.hideLoading()
+      })
   }
 
   /**
    * Create a new product
    * @param {Product} product Product data
-   * @returns {Promise<Product>} Product created
+   * @returns {Promise<void>} Product created
    */
   async create(product) {
-    const result = await window.api.addProduct(product)
+    console.log('Creating product', product)
+    this.showLoading('Creando producto')
+    const [result] = await this.api
+      .addProduct(product)
+      .catch(() => {
+        toast.error('Error al crear el producto', { toastId: 'create-product' })
+      })
+      .finally(() => {
+        this.hideLoading()
+      })
+
+    console.log('Product created', result)
+
+    if (result) {
+      store.dispatch(addProducts([result]))
+    }
+
     return result
   }
 
@@ -66,25 +95,43 @@ export default class ProductService {
    * @returns {Promise<void>}
    */
   async delete(product) {
-    const result = await window.api.deleteProduct(product)
+    this.showLoading('Eliminando producto')
 
-    if (result) {
-      // this.list = this.list.filter((p) => p.id !== product.id)
-      store.dispatch(deleteProduct(product))
-    }
+    await this.api
+      .deleteProduct(product)
+      .then(() => {
+        store.dispatch(deleteProduct(product))
+      })
+      .catch(() => {
+        toast.error(`Error al eliminar el producto`, { toastId: 'delete-product' })
+      })
+      .finally(() => {
+        this.hideLoading()
+      })
   }
 
   /**
    * Update a product
    * @param {Product} product Product to update
-   * @returns {Promise<Product>} Updated product
+   * @returns {Promise<void>}
    */
   async update(product) {
-    const result = await window.api.updateProduct(product)
+    console.log('Updating product', product)
+    this.showLoading('Actualizando producto')
+
+    const [result] = await this.api
+      .updateProduct(product)
+      .catch(() => {
+        toast.error('Error al crear el producto', { toastId: 'create-product' })
+      })
+      .finally(() => {
+        this.hideLoading()
+      })
+
+    console.log('Product created', result)
 
     if (result) {
-      // this.list = this.list.map((p) => (p.id === product.id ? product : p))
-      store.dispatch(updateProduct(product))
+      store.dispatch(updateProduct(result))
     }
 
     return result

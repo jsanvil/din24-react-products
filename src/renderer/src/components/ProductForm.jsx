@@ -1,40 +1,24 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react'
-import { Container, Form, Button, FloatingLabel } from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import { addProduct, updateProduct } from '../redux/productsSlice'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { Container, Form, Button, FloatingLabel } from 'react-bootstrap'
 import ProductService from '../models/ProductService'
 import GoMainListButton from './GoMainListButton'
 import Navigation from '../helpers/Navigation'
-import { toast } from 'react-toastify'
-import Loading from '../helpers/Loading'
-import { setLoading } from '../redux/appSlice'
 
 export default function ProductForm() {
-  const repository = new ProductService()
+  const service = new ProductService()
   const nav = new Navigation()
-
-  const dispatch = useDispatch()
 
   const { id } = useParams()
 
   const product = useSelector((state) => state.products.list.find((p) => p.id === id))
-  const [imagePreview, setImagePreview] = useState(product?.imageBase64 || '')
-  const [updatedImage, setUpdatedImage] = useState(false)
+
+  const [imagePreview, setImagePreview] = useState(product?.image || '')
 
   const [validated, setValidated] = useState(false)
-
-  const loadingMsg = new Loading(dispatch, setLoading)
-
-  useEffect(() => {
-    if (product?.image) {
-      window.api.getImage(product.image).then((base64data) => {
-        setImagePreview(base64data)
-        setUpdatedImage(false)
-      })
-    }
-  }, [product])
+  const [imageLoaded, setImageLoaded] = useState(product?.image.startsWith('data:image') || false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -56,38 +40,23 @@ export default function ProductForm() {
         stock: form.formProductStock.value,
         description: form.formProductDescription.value,
         availableTimestamp: form.formProductAvailableTimestamp.value,
-        imageBase64: imagePreview,
-        updatedImage: updatedImage
+        image: imagePreview
       }
+
+      let result
 
       if (id) {
-        loadingMsg.showLoadingMsg('Actualizando producto')
-        // Update product
-        const result = await repository.update(formProduct).catch(() => {
-          toast.error(`Error al actualizar el producto`, { toastId: 'update-product' })
-        })
-        if (result) {
-          dispatch(updateProduct(result))
-          toast.success(`Producto actualizado: "${formProduct.name}"`, {
-            toastId: 'update-product'
-          })
-        }
+        console.log('form update')
+        result = await service.update(formProduct)
       } else {
-        loadingMsg.showLoadingMsg('Creando producto')
-        // Create product
-        const result = await repository.create(formProduct)
-        if (result) {
-          dispatch(addProduct(result))
-          toast.success(`Producto creado: "${formProduct.name}"`, { toastId: 'create-product' })
-        }
+        console.log('form create')
+        result = await service.create(formProduct)
+        form.reset()
       }
 
-      loadingMsg.hideLoadingMsg()
-
-      form.reset()
-      setValidated(false)
-      form.formProductName.focus()
-      nav.mainList()
+      if (result?.id) {
+        nav.productDetail(result.id)
+      }
     }
   }
 
@@ -95,8 +64,8 @@ export default function ProductForm() {
     e.preventDefault()
     e.stopPropagation()
     await window.api.chooseImageFile().then((base64data) => {
-      setImagePreview(base64data)
-      setUpdatedImage(true)
+      setImagePreview(`data:image/png;base64,${base64data}`)
+      setImageLoaded(true)
     })
   }
 
@@ -126,6 +95,7 @@ export default function ProductForm() {
             placeholder=""
             required
             min={0}
+            step={0.01}
             defaultValue={product?.price}
           />
           <Form.Control.Feedback type="invalid">
@@ -138,6 +108,7 @@ export default function ProductForm() {
             placeholder=""
             required
             min={0}
+            step={1}
             defaultValue={product?.stock}
           />
           <Form.Control.Feedback type="invalid">
@@ -173,16 +144,18 @@ export default function ProductForm() {
               variant="danger"
               onClick={() => {
                 setImagePreview('')
-                setUpdatedImage(true)
               }}
             >
               Eliminar imagen
             </Button>
-            <img
-              alt="product image preview"
-              src={`data:image/webp;base64,${imagePreview}`}
-              className="img-fluid img-thumbnail w-50"
-            />
+            {imageLoaded && (
+              <img
+                alt="product image preview"
+                src={imagePreview ? imagePreview : product?.image}
+                className="img-fluid img-thumbnail w-50"
+                onLoad={() => setImageLoaded(true)}
+              />
+            )}
           </>
         ) : null}
         <Button variant="primary" type="submit">

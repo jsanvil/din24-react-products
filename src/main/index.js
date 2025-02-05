@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import LocalProductRepository from './repository/LocalProductRepository'
+// import LocalProductRepository from './repository/LocalProductRepository'
 import ImageUtil from './utils/ImageUtil'
 import ApiProductRepository from './repository/ApiProductRepository'
 
@@ -52,9 +52,6 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
   initStorage().then(() => {
     console.log('Storage initialized')
     createWindow()
@@ -89,7 +86,6 @@ async function initStorage() {
 // code. You can also put them in separate files and require them here.
 
 ipcMain.handle('delete-product', async (event, product) => {
-  console.log('Deleting product:', product)
   const window = BrowserWindow.fromWebContents(event.sender)
 
   const options = {
@@ -131,7 +127,7 @@ ipcMain.handle('choose-image-file', async (event) => {
   const window = BrowserWindow.fromWebContents(event.sender)
   const result = await dialog.showOpenDialog(window, {
     properties: ['openFile'],
-    filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png'] }]
+    filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'webp'] }]
   })
 
   if (!result.canceled) {
