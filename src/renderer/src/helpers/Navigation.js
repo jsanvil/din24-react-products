@@ -21,22 +21,22 @@ export default class Navigation {
   }
 
   mainList() {
-    this.dispatchTitle('Electron React Products')
+    this.dispatchTitle('mainView.title')
     this.navigate('/')
   }
 
   productEdit(id) {
-    this.dispatchTitle('Editar producto')
+    this.dispatchTitle('formView.titleEdit')
     this.navigate(`/edit/${id}`)
   }
 
   newProduct() {
-    this.dispatchTitle('Nuevo producto')
+    this.dispatchTitle('formView.newTitle')
     this.navigate('/create')
   }
 
   productDetail(id) {
-    this.dispatchTitle('Detalles del producto')
+    this.dispatchTitle('detailView.title')
     this.navigate(`/detail/${id}`)
   }
 }

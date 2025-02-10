@@ -54,12 +54,17 @@ export default class ProductService {
    * @param {number} size Number of products to get
    * @returns {Promise<Product[]>} List of products
    */
-  async getProducts(from = 0, size = LIMIT) {
+  async getProducts() {
     this.showLoading()
     await this.api
-      .getProducts(from, size, this.getFilters())
-      .then((result) => {
-        store.dispatch(setProducts(result))
+      .getProducts(this.getFilters())
+      .then((response) => {
+        if (response.errors) {
+          toast.error(getErrorMessage(response.error), { toastId: 'get-products' })
+          return
+        } else {
+          store.dispatch(setProducts(response.result))
+        }
       })
       .catch(() => {
         toast.error('Error al cargar los productos', { toastId: 'get-products' })
@@ -172,16 +177,8 @@ const ERRORS = {
     error: 'image-invalid',
     message: 'Invalid image URL or base64 string'
   },
-  getNotFound: {
-    error: 'get-not-found',
-    message: 'Product not found'
-  },
-  putNotFound: {
-    error: 'put-not-found',
-    message: 'Product not found'
-  },
-  deleteNotFound: {
-    error: 'delete-not-found',
+  productNotFound: {
+    error: 'product-not-found',
     message: 'Product not found'
   },
   invalidQuerySearch: {
@@ -226,59 +223,59 @@ const ERRORS = {
   }
 }
 
-const getErrorMessage = (e) => {
-  if (e.error === ERRORS.queryFailed.error) {
+const getErrorMessage = (error) => {
+  if (error.key === ERRORS.queryFailed.error) {
     return 'Error al ejecutar la consulta'
   }
-  if (e.error === ERRORS.postDuplicated.error) {
+  if (error.key === ERRORS.postDuplicated.error) {
     return 'El producto ya existe'
   }
-  if (e.error === ERRORS.requiredFields.error) {
+  if (error.key === ERRORS.requiredFields.error) {
     return 'Nombre y precio son requeridos'
   }
-  if (e.error === ERRORS.imageSize.error) {
+  if (error.key === ERRORS.imageSize.error) {
     return 'El tamaño de la imagen debe ser menor a 512KB'
   }
-  if (e.error === ERRORS.imageInvalid.error) {
+  if (error.key === ERRORS.imageInvalid.error) {
     return 'URL de imagen o cadena base64 inválida'
   }
-  if (e.error === ERRORS.getNotFound.error) {
+  if (error.key === ERRORS.productNotFound.error) {
     return 'Producto no encontrado'
   }
-  if (e.error === ERRORS.putNotFound.error) {
+  if (error.key === ERRORS.putNotFound.error) {
     return 'Producto no encontrado'
   }
-  if (e.error === ERRORS.deleteNotFound.error) {
+  if (error.key === ERRORS.deleteNotFound.error) {
     return 'Producto no encontrado'
   }
-  if (e.error === ERRORS.invalidQuerySearch.error) {
+  if (error.key === ERRORS.invalidQuerySearch.error) {
     return 'Consulta de búsqueda no inválida'
   }
-  if (e.error === ERRORS.invalidQueryMinStock.error) {
+  if (error.key === ERRORS.invalidQueryMinStock.error) {
     return 'Consulta Stock mínimo no válida'
   }
-  if (e.error === ERRORS.invalidQueryMinPrice.error) {
+  if (error.key === ERRORS.invalidQueryMinPrice.error) {
     return 'Consulta Precio mínimo no válida'
   }
-  if (e.error === ERRORS.invalidQueryMaxPrice.error) {
+  if (error.key === ERRORS.invalidQueryMaxPrice.error) {
     return 'Consulta Precio máximo no válida'
   }
-  if (e.error === ERRORS.invalidQueryMinDate.error) {
+  if (error.key === ERRORS.invalidQueryMinDate.error) {
     return 'Consulta Fecha mínima no válida'
   }
-  if (e.error === ERRORS.invalidQueryMaxDate.error) {
+  if (error.key === ERRORS.invalidQueryMaxDate.error) {
     return 'Consulta Fecha máxima no válida'
   }
-  if (e.error === ERRORS.invalidQueryLimit.error) {
+  if (error.key === ERRORS.invalidQueryLimit.error) {
     return 'Consulta de límite no válida'
   }
-  if (e.error === ERRORS.invalidQueryOffset.error) {
+  if (error.key === ERRORS.invalidQueryOffset.error) {
     return 'Consulta de offset no válida'
   }
-  if (e.error === ERRORS.invalidQuerySort.error) {
+  if (error.key === ERRORS.invalidQuerySort.error) {
     return 'Consulta de ordenación no válida'
   }
-  if (e.error === ERRORS.invalidQueryOrder.error) {
+  if (error.key === ERRORS.invalidQueryOrder.error) {
     return 'Consulta de sentido de ordenación no válida'
   }
 

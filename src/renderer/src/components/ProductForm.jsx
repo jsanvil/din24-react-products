@@ -18,7 +18,7 @@ export default function ProductForm() {
   const [imagePreview, setImagePreview] = useState(product?.image || '')
 
   const [validated, setValidated] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(product?.image.startsWith('data:image') || false)
+  const [imageLoaded, setImageLoaded] = useState(product?.image?.startsWith('data:image') || false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()

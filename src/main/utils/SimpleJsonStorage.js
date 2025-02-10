@@ -1,7 +1,4 @@
-'use strict'
-// @ts-check
-
-const fs = require('fs')
+import fs from 'fs'
 
 /**
  * Storage class for JSON files

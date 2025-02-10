@@ -1,0 +1,42 @@
+{
+  "mainMenu": {
+    "appName": "&Productos",
+    "appName-quit": "&Salir",
+    "options": "&Opciones",
+    "options-darkMode": "Modo &Oscuro",
+    "options-lightMode": "Modo &Claro",
+    "options-language": "Idioma",
+    "options-language-en": "English",
+    "options-language-es": "Español",
+    "help": "&Ayuda",
+    "help-about": "&Acerca de",
+    "help-about-title": "Acerca de Productos",
+    "help-about-message": "Aplicación de productos",
+    "help-about-detail": "Repositorio: https://github.com/jsanvil/din24-react-products"
+  },
+  "productDetail": {
+    "name": "Producto",
+    "price": "Precio",
+    "stock": "Stock",
+    "description": "Descripción",
+    "available": "Disponible"
+  },
+  "mainView": {
+    "searchPlaceholder": "buscar...",
+    "newProductBtn": "Crear",
+    "title": "Aplicación de Productos en Electron y React"
+  },
+  "itemView": {
+    "stock": "en stock",
+    "priceFree": "GRATIS",
+    "stockEmpty": "sin stock"
+  },
+  "filtersView": {
+    "priceLessThan": "menos de",
+    "priceBetweenMin": "entre",
+    "priceBetweenAndMax": "y",
+    "priceGreaterThan": "más de"
+  },
+  "formView": { "newTitle": "Crear nuevo producto", "titleEdit": "Editar producto" },
+  "detailView": { "title": "Detalles del producto" }
+}

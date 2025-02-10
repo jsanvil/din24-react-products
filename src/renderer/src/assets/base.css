@@ -14,4 +14,12 @@
   --color-gray-light: #f8f9fa;
   --color-gray-lighter: #f1f3f5;
   --color-gray-lightest: #f8f9fa;
+
+  &[data-bs-theme='dark'] {
+    --bs-body-bg: #222229;
+  }
+
+  &[data-bs-theme='light'] {
+    --bs-body-bg: #fffffa;
+  }
 }

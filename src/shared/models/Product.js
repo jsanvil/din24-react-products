@@ -13,12 +13,14 @@ export default class Product {
    * @param {Date} date Product date
    */
   constructor({ id, name, price, stock, image, description, date }) {
-    this.id = id
-    this.name = name
-    this.price = price
-    this.stock = stock
-    this.image = image
-    this.description = description
-    this.date = date
+    this.id = id || ''
+    this.name = name || ''
+    this.price =
+      typeof price === 'string' ? parseFloat(price?.replace(/[^0-9.+-]/g, '')) || 0 : price || 0
+    this.stock =
+      typeof stock === 'string' ? parseFloat(price?.replace(/[^0-9.+-]/g, '')) || 0 : price || 0
+    this.image = image || ''
+    this.description = description || ''
+    this.date = date || ''
   }
 }

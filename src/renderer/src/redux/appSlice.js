@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const appSlice = createSlice({
   name: 'app',
   initialState: {
-    title: 'Electron React Products',
+    title: 'mainView.title',
     loading: {
       status: false,
       text: 'Cargando...',

@@ -4,8 +4,11 @@ import Navigation from '../helpers/Navigation'
 import ProductListFilters from './ProductListFilters'
 import ProductListSearch from './ProductListSearch'
 
+import { useTranslation } from 'react-i18next'
+
 export default function MainList() {
   const nav = new Navigation()
+  const { t } = useTranslation()
 
   return (
     <Container fluid className="my-3 d-flex flex-row">
@@ -19,7 +22,7 @@ export default function MainList() {
             variant="outline-primary"
             onClick={() => nav.newProduct()}
           >
-            <i className="bi bi-plus"></i> Crear
+            <i className="bi bi-plus"></i> {t('mainView.newProductBtn')}
           </Button>
         </Container>
         <ProductList />

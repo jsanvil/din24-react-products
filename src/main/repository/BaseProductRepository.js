@@ -1,4 +1,8 @@
 /* eslint-disable no-unused-vars */
+
+import Filters from '../../shared/models/Filters'
+import Product from '../../shared/models/Product'
+
 /**
  * Base product service class
  * @abstract
@@ -10,49 +14,46 @@ export default class BaseProductRepository {
 
   /**
    * Get all products
-   * @returns {Array} List of products
+   * @param {Filters} filters Filters to apply to the query (optional)
+   * @returns {Promise<Product[]>} List of products
    */
-  getAll() {
-    throw new Error('Method not implemented')
-  }
-
-  get(from, size) {
+  async get(filters = new Filters()) {
     throw new Error('Method not implemented')
   }
 
   /**
    * Create a new product
    * @param {Product} product Product data
-   * @returns {Product} Product created
+   * @returns {Promise<Product>} Product created
    */
-  create(product) {
+  async create(product) {
     throw new Error('Method not implemented')
   }
 
   /**
    * Update a product
    * @param {Product} product Product data
-   * @returns {Product} Product updated
+   * @returns {Promise<Product>} Product updated
    */
-  update(product) {
+  async update(product) {
     throw new Error('Method not implemented')
   }
 
   /**
    * Delete a product
    * @param {Product} product Product to delete
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  delete(product) {
+  async delete(product) {
     throw new Error('Method not implemented')
   }
 
   /**
    * Get a product by id
    * @param {string} id Product id
-   * @returns {Product} Product
+   * @returns {Promise<Product>} Product
    */
-  getById(id) {
+  async getById(id) {
     throw new Error('Method not implemented')
   }
 }

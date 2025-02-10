@@ -1,16 +1,30 @@
+/* eslint-disable no-unused-vars */
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import i18nextBackend from 'i18next-electron-fs-backend'
+import Filters from '../shared/models/Filters'
 
 // Custom APIs for renderer
 const api = {
-  getProducts: async (from, size, filters) => {
+  /**
+   * Get all products from the main process repository
+   * @param {Filters} filters
+   * @returns Promise<Product[]>
+   */
+  getProducts: async (filters) => {
     try {
-      return await ipcRenderer.invoke('get-products', from, size, filters)
+      return await ipcRenderer.invoke('get-products', filters)
     } catch (error) {
       console.error(error)
       throw error
     }
   },
+  /**
+   * Add a new product to the main process repository
+   * @param {Product} product
+   * @returns Promise<Product>
+   * @throws Error
+   */
   addProduct: async (product) => {
     return await ipcRenderer.invoke('add-product', product).catch((error) => {
       console.error(error)
@@ -40,7 +54,10 @@ const api = {
       console.error(error)
       throw error
     })
-  }
+  },
+  onUpdateTheme: (theme) => ipcRenderer.on('update-theme', theme),
+  onChangeLanguage: (language) => ipcRenderer.on('change-language', language),
+  i18nextElectronBackend: i18nextBackend.preloadBindings(ipcRenderer, process)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

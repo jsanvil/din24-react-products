@@ -18,7 +18,7 @@
   background-size: cover;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: #fefeff11;
     transition: background-color 0.3s;
     transform: scale(1.02);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

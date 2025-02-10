@@ -4,9 +4,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { deleteProduct } from '../redux/productsSlice'
 import Navigation from '../helpers/Navigation'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function ProductListItem({ productId }) {
   const nav = new Navigation()
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const product = useSelector((state) => state.products.list.find((p) => p.id === productId))
 
@@ -73,16 +75,16 @@ export default function ProductListItem({ productId }) {
             <Card.Text className="m-0">{product.price}€</Card.Text>
           ) : (
             <Card.Text className="m-0 text-success">
-              <i className="bi bi-gift"></i> GRATIS
+              <i className="bi bi-gift"></i> {t('itemView.priceFree')}
             </Card.Text>
           )}
           {product.stock > 0 ? (
             <Card.Text className="fst-italic fw-light p-0 m-0 small text-end d-block m-0">
-              {product.stock} en stock
+              {product.stock} {t('itemView.stock')}
             </Card.Text>
           ) : (
             <Card.Text className="text-danger fst-italic fw-light p-0 m-0 small text-end d-block">
-              <i className="bi bi-x-circle"></i> Sin stock
+              <i className="bi bi-x-circle"></i> {t('itemView.stockEmpty')}
             </Card.Text>
           )}
         </Container>

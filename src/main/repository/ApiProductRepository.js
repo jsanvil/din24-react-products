@@ -1,5 +1,6 @@
 import BaseProductRepository from './BaseProductRepository'
 import ImageUtil from '../utils/ImageUtil'
+import ProductResponse from '../../shared/models/ProductResonse'
 
 const API_URL = 'https://api-example.jacinto-sanchez.workers.dev/api/'
 const ENDPOINT_PRODUCTS = 'products'
@@ -26,10 +27,6 @@ export default class ApiProductRepository extends BaseProductRepository {
    * Get all products
    * @returns {Promise<Product[]>} List of products
    */
-  async getAll() {
-    console.log('TODO: Getting all products')
-  }
-
   async get(from = 0, size = 5, filters = {}) {
     let params = new URLSearchParams({ offset: from, limit: size })
 
@@ -70,12 +67,20 @@ export default class ApiProductRepository extends BaseProductRepository {
     await fetch(`${this.productsUrl}?${params}`, {
       headers: AUTH_HEADER
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          res.json().then((error) => {
+            return ProductResponse(null, error.json())
+          })
+        }
+        return res.json()
+      })
       .then((data) => {
         console.log('Products', data)
         this.products = data.results
       })
-    return this.products
+    return new ProductResponse(this.products)
+    // return this.products
   }
 
   /**

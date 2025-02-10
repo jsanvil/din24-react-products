@@ -15,6 +15,7 @@ import ProductDetail from './components/ProductDetail'
 import { useSelector } from 'react-redux'
 import { Container } from 'react-bootstrap'
 import LoadingSpinner from './components/LoadingSpinner'
+import { Suspense } from 'react'
 
 function App() {
   const service = new ProductService()
@@ -31,28 +32,30 @@ function App() {
   }, [])
 
   return (
-    <Container fluid className="d-flex flex-column p-0 vw-100 vh-100">
-      <AppHeader />
-      <Container fluid className="d-flex flex-grow-1 overflow-auto">
-        {loadingState.status && (
-          <Container
-            fluid
-            className="loader position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-          >
-            <LoadingSpinner />
-          </Container>
-        )}
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<MainList />} />
-            <Route path="/detail/:id" element={<ProductDetail />} />
-            <Route path="/edit/:id" element={<ProductForm />} />
-            <Route path="/create" element={<ProductForm />} />
-          </Routes>
-        </HashRouter>
+    <Suspense fallback="loading">
+      <Container fluid className="d-flex flex-column p-0 vw-100 vh-100">
+        <AppHeader />
+        <Container fluid className="d-flex flex-grow-1 overflow-auto">
+          {loadingState.status && (
+            <Container
+              fluid
+              className="loader position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+            >
+              <LoadingSpinner />
+            </Container>
+          )}
+          <HashRouter>
+            <Routes>
+              <Route path="/" element={<MainList />} />
+              <Route path="/detail/:id" element={<ProductDetail />} />
+              <Route path="/edit/:id" element={<ProductForm />} />
+              <Route path="/create" element={<ProductForm />} />
+            </Routes>
+          </HashRouter>
+        </Container>
+        <ToastContainer position="bottom-right" autoClose="2000" />
       </Container>
-      <ToastContainer position="bottom-right" autoClose="2000" />
-    </Container>
+    </Suspense>
   )
 }
 

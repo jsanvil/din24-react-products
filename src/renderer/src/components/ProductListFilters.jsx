@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { Button, Form } from 'react-bootstrap'
 import Slider from '@mui/material/Slider'
 import {
@@ -17,6 +18,7 @@ export default function ProductListFilters() {
   const STOCK_MIN = 0
 
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const service = new ProductService()
 
   const { sort } = useSelector((state) => state.products.filters)
@@ -56,11 +58,11 @@ export default function ProductListFilters() {
     let label = ''
 
     if (hasMin && hasMax) {
-      label = `entre ${priceMin} y ${priceMax}`
+      label = `${t('filtersView.priceBetweenMin')} ${priceMin} ${t('filtersView.priceBetweenAndMax')} ${priceMax}`
     } else if (hasMin) {
-      label = `más de ${priceMin}`
+      label = `${t('filtersView.priceGreaterThan')} ${priceMin}`
     } else if (hasMax) {
-      label = `menos de ${priceMax}`
+      label = `${t('filtersView.priceLessThan')} ${priceMax}`
     }
 
     if (label.length > 0) {

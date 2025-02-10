@@ -1,0 +1,47 @@
+{
+  "mainMenu": {
+    "appName": "&Products",
+    "appName-quit": "&Quit",
+    "options": "&Options",
+    "options-darkMode": "&Dark Mode",
+    "options-lightMode": "&Light Mode",
+    "options-language": "Language",
+    "options-language-en": "English",
+    "options-language-es": "Español",
+    "help": "&Help",
+    "help-about": "&About",
+    "help-about-title": "About Products",
+    "help-about-message": "Products app",
+    "help-about-detail": "Repository: https://github.com/jsanvil/din24-react-products"
+  },
+  "productDetail": {
+    "name": "Product",
+    "price": "Price",
+    "stock": "Stock",
+    "description": "Description",
+    "available": "Available"
+  },
+  "mainView": {
+    "newProductBtn": "Create",
+    "searchPlaceholder": "search...",
+    "title": "Electron React Products App"
+  },
+  "itemView": {
+    "stock": "in stock",
+    "priceFree": "FREE",
+    "stockEmpty": "out of stock"
+  },
+  "filtersView": {
+    "priceGreaterThan": "more than",
+    "priceLessThan": "less than",
+    "priceBetweenMin": "between",
+    "priceBetweenAndMax": "and"
+  },
+  "formView": {
+    "newTitle": "Create a new product",
+    "titleEdit": "Edit product"
+  },
+  "detailView": {
+    "title": "Product details"
+  }
+}
